@@ -429,3 +429,138 @@ addEventListener("hashchange",()=>route());
 
 /* ============ ЗАПУСК ============ */
 (async function(){document.documentElement.dataset.theme=DB.g("theme","light");await seed();const s=DB.g("sess",null);ME=users().find(x=>x.e===s)||null;route()})();
+
+/* ============ IMERZA AI ASSISTANT ============ */
+(() => {
+  const widget = document.createElement("div");
+  widget.id = "imerza-ai";
+  widget.innerHTML = `
+    <button class="ia-launch" id="ia-launch" aria-label="Открыть IMERZA AI">
+      <span>✦</span>
+    </button>
+
+    <section class="ia-panel" id="ia-panel" aria-label="IMERZA AI Assistant" hidden>
+      <header class="ia-head">
+        <div class="ia-brand">
+          <span class="ia-symbol">✦</span>
+          <div>
+            <strong>IMERZA AI</strong>
+            <small>Educational assistant</small>
+          </div>
+        </div>
+        <div class="ia-actions">
+          <button type="button" id="ia-clear" title="Новый диалог">↻</button>
+          <button type="button" id="ia-close" title="Закрыть">×</button>
+        </div>
+      </header>
+
+      <div class="ia-messages" id="ia-messages" aria-live="polite">
+        <div class="ia-msg assistant">
+          Привет! Я IMERZA AI — твой образовательный помощник.
+          Могу помочь с олимпиадами, учёбой, поиском возможностей и подготовкой к конкурсам.
+          Чем займёмся?
+        </div>
+      </div>
+
+      <form class="ia-form" id="ia-form">
+        <textarea id="ia-input" rows="1" maxlength="4000"
+          placeholder="Напиши свой вопрос..." aria-label="Сообщение"></textarea>
+        <button type="submit" id="ia-send" aria-label="Отправить">↑</button>
+      </form>
+      <div class="ia-foot">IMERZA AI может допускать ошибки. Проверяй важную информацию.</div>
+    </section>
+  `;
+  document.body.appendChild(widget);
+
+  const panel = document.getElementById("ia-panel");
+  const launch = document.getElementById("ia-launch");
+  const messages = document.getElementById("ia-messages");
+  const form = document.getElementById("ia-form");
+  const input = document.getElementById("ia-input");
+  const send = document.getElementById("ia-send");
+
+  let history = [];
+  let busy = false;
+
+  function addMessage(text, role) {
+    const node = document.createElement("div");
+    node.className = `ia-msg ${role}`;
+    node.textContent = text;
+    messages.appendChild(node);
+    messages.scrollTop = messages.scrollHeight;
+    return node;
+  }
+
+  launch.addEventListener("click", () => {
+    panel.hidden = false;
+    launch.hidden = true;
+    input.focus();
+  });
+
+  document.getElementById("ia-close").addEventListener("click", () => {
+    panel.hidden = true;
+    launch.hidden = false;
+  });
+
+  document.getElementById("ia-clear").addEventListener("click", () => {
+    history = [];
+    messages.innerHTML = "";
+    addMessage("Новый диалог начат! Чем могу помочь?", "assistant");
+  });
+
+  input.addEventListener("keydown", event => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      form.requestSubmit();
+    }
+  });
+
+  form.addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const message = input.value.trim();
+    if (!message || busy) return;
+
+    busy = true;
+    send.disabled = true;
+    input.value = "";
+    addMessage(message, "user");
+
+    const loading = addMessage("IMERZA AI печатает...", "assistant");
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message,
+          history: history.slice(-12)
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.reply) {
+        throw new Error(data.error || "Не удалось получить ответ.");
+      }
+
+      loading.textContent = data.reply;
+
+      history.push(
+        { role: "user", parts: [{ text: message }] },
+        { role: "model", parts: [{ text: data.reply }] }
+      );
+
+      history = history.slice(-12);
+    } catch (error) {
+      loading.textContent =
+        "Не удалось подключиться к IMERZA AI. Попробуй ещё раз немного позже.";
+      console.error("IMERZA AI:", error);
+    } finally {
+      busy = false;
+      send.disabled = false;
+      input.focus();
+      messages.scrollTop = messages.scrollHeight;
+    }
+  });
+})();
