@@ -138,3 +138,191 @@ input,select,textarea{border:1px solid var(--bd);border-radius:10px;background:v
 footer{border-top:1px solid var(--bd);padding-top:64px}.fine{border-top:1px solid var(--bd)}.cal>div{border-radius:8px}.col{border:1px solid var(--bd);border-radius:12px}
 @media(max-width:900px){.herogrid{grid-template-columns:1fr}.hero{padding:68px 0}.orbit{max-width:360px}.hd{height:70px}nav.main{top:70px;box-shadow:0 20px 30px #00000010}}
 @media(max-width:640px){.hero{padding:56px 0}.sec{padding:65px 0}.card{padding:22px}.orbit{max-width:none}.stk{position:static;transform:none}.detail .sect{padding-top:20px}.fg{gap:26px}}
+
+/* ============ IMERZA AI ASSISTANT ============ */
+#imerza-ai {
+  font-family: Onest, system-ui, sans-serif;
+}
+
+.ia-launch {
+  position: fixed;
+  right: 26px;
+  bottom: 26px;
+  z-index: 1000;
+  width: 58px;
+  height: 58px;
+  border: 1.5px solid var(--line);
+  border-radius: 50%;
+  background: var(--ac);
+  color: var(--on);
+  font-size: 27px;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 var(--sh);
+}
+
+.ia-launch:hover {
+  transform: translateY(-2px);
+}
+
+.ia-panel {
+  position: fixed;
+  right: 26px;
+  bottom: 98px;
+  z-index: 1001;
+  width: min(390px, calc(100vw - 32px));
+  height: min(570px, calc(100dvh - 125px));
+  background: var(--s1);
+  color: var(--tx);
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 6px 6px 0 var(--sh);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.ia-panel[hidden],
+.ia-launch[hidden] {
+  display: none;
+}
+
+.ia-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid var(--bd);
+  background: var(--s2);
+}
+
+.ia-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.ia-brand strong,
+.ia-brand small {
+  display: block;
+}
+
+.ia-brand strong {
+  font-size: 15px;
+  letter-spacing: .04em;
+}
+
+.ia-brand small {
+  color: var(--mu);
+  font-size: 11px;
+}
+
+.ia-symbol {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--ac);
+  color: var(--on);
+  font-size: 20px;
+}
+
+.ia-actions {
+  display: flex;
+  gap: 7px;
+}
+
+.ia-actions button {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--bd);
+  border-radius: 6px;
+  background: var(--s1);
+  color: var(--tx);
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.ia-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ia-msg {
+  max-width: 88%;
+  padding: 11px 13px;
+  border: 1px solid var(--bd);
+  border-radius: 9px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.ia-msg.assistant {
+  align-self: flex-start;
+  background: var(--s2);
+}
+
+.ia-msg.user {
+  align-self: flex-end;
+  background: var(--ac);
+  color: var(--on);
+  border-color: var(--ac);
+}
+
+.ia-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid var(--bd);
+}
+
+.ia-form textarea {
+  min-height: 44px;
+  max-height: 110px;
+  resize: vertical;
+  font-size: 14px;
+}
+
+.ia-form button {
+  flex: 0 0 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--ac);
+  color: var(--on);
+  font-size: 23px;
+  cursor: pointer;
+}
+
+.ia-form button:disabled {
+  opacity: .5;
+  cursor: wait;
+}
+
+.ia-foot {
+  padding: 0 12px 10px;
+  color: var(--mu);
+  font-size: 10px;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .ia-launch {
+    right: 16px;
+    bottom: 18px;
+  }
+
+  .ia-panel {
+    right: 8px;
+    bottom: 84px;
+    width: calc(100vw - 16px);
+    height: min(570px, calc(100dvh - 100px));
+  }
+}
