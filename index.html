@@ -35,5 +35,21 @@
 <div id="toast" role="status" aria-live="polite"></div>
 <noscript><p style="padding:24px">Для работы IMERZA необходим включённый JavaScript.</p></noscript>
 <script src="script.js" defer></script>
+  
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker
+        .register("/service-worker.js")
+        .then((registration) => {
+          console.log("IMERZA PWA registered:", registration.scope);
+        })
+        .catch((error) => {
+          console.error("IMERZA PWA registration failed:", error);
+        });
+    });
+  }
+</script>
+
 </body>
 </html>
